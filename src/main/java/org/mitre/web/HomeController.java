@@ -49,7 +49,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/admin")
-	@PreAuthorize("hasRole('ROLE_USER')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public String admin() {
 		return "admin";
 	}
