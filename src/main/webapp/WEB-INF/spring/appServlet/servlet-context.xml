@@ -53,21 +53,18 @@
 		<security:authentication-provider ref="openIdConnectAuthenticationProvider" />
 	</security:authentication-manager>
 
-	<beans:bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OpenIdConnectAuthenticationProvider">
-		<beans:property name="userDetailsService" ref="myUserDetailsService" />
-	</beans:bean>
+	<beans:bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OpenIdConnectAuthenticationProvider" />
 
 	<beans:bean id="openIdConnectAuthenticationFilter" class="org.mitre.openid.connect.client.OIDCAuthenticationFilter">
 		<beans:property name="authenticationManager" ref="authenticationManager" />
 		<beans:property name="errorRedirectURI" value="/login.jsp?authfail=openid" />
-		<beans:property name="authorizationEndpointURI"	value="http://idp.example.org:8080/openid-connect-server/openidconnect/auth" />
-		<beans:property name="tokenEndpointURI"	value="http://idp.example.org:8080/openid-connect-server/openidconnect/token" />
+		<beans:property name="authorizationEndpointUrl"	value="http://idp.example.org:8080/openid-connect-server/openidconnect/auth" />
+		<beans:property name="tokenEndpointUrl"	value="http://idp.example.org:8080/openid-connect-server/openidconnect/token" />
 		<beans:property name="clientId" value="client" />
 		<beans:property name="clientSecret" value="secret" />
 		<beans:property name="jwkSigningUrl" value="http://idp.example.org:8080/openid-connect-server/jwk" />
-		<beans:property name="issuer" value="http://localhost/" />
+		<beans:property name="issuer" value="http://idp.example.org:8080/openid-connect-server" />
+		<beans:property name="userInfoUrl" value="http://idp.example.org:8080/openid-connect-server/userinfo" />
 	</beans:bean>
-
-	<beans:bean id="myUserDetailsService" class="org.mitre.web.MyUserDetailsService" />
 
 </beans:beans>
