@@ -1,5 +1,6 @@
 package org.mitre.web;
 
+import java.security.Principal;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -24,7 +25,7 @@ public class HomeController {
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	public String home(Locale locale, Model model, Principal p) {
 		logger.info("Welcome home! the client locale is "+ locale.toString());
 		
 		Date date = new Date();
@@ -39,18 +40,18 @@ public class HomeController {
 	
 	@RequestMapping("/user")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public String user() {
+	public String user(Principal p) {
 		return "user";
 	}
 	
 	@RequestMapping("/open")
-	public String open() {
+	public String open(Principal p) {
 		return "open";
 	}
 	
 	@RequestMapping("/admin")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public String admin() {
+	public String admin(Principal p) {
 		return "admin";
 	}
 	
