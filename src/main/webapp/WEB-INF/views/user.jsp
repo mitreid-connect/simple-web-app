@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>
-	You have to have ROLE_USER  
+	You have logged in with access: ROLE_USER  
 </h1>
 
 <a href="admin">Admin</a>

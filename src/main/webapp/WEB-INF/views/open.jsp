@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>
-	This page is open!  
+	This page is open!  You don't need to be logged in.
 </h1>
 
 <a href="admin">Admin</a>
