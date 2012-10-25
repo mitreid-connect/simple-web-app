@@ -53,7 +53,7 @@
 		<security:authentication-provider ref="openIdConnectAuthenticationProvider" />
 	</security:authentication-manager>
 
-	<beans:bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OpenIdConnectAuthenticationProvider" />
+	<beans:bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OIDCAuthenticationProvider" />
 
 	<beans:bean id="openIdConnectAuthenticationFilter" class="org.mitre.openid.connect.client.OIDCAuthenticationFilter">
 		<beans:property name="authenticationManager" ref="authenticationManager" />

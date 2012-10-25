@@ -3,7 +3,7 @@ package org.mitre.web;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.mitre.openid.connect.client.OpenIdConnectAuthenticationToken;
+import org.mitre.openid.connect.client.OIDCAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class MyUserDetailsService implements UserDetailsService, AuthenticationUserDetailsService<OpenIdConnectAuthenticationToken> {
+public class MyUserDetailsService implements UserDetailsService, AuthenticationUserDetailsService<OIDCAuthenticationToken> {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -24,7 +24,7 @@ public class MyUserDetailsService implements UserDetailsService, AuthenticationU
 	}
 
 	@Override
-    public UserDetails loadUserDetails(OpenIdConnectAuthenticationToken token) throws UsernameNotFoundException {
+    public UserDetails loadUserDetails(OIDCAuthenticationToken token) throws UsernameNotFoundException {
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
