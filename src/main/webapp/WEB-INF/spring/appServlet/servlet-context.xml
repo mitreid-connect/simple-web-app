@@ -30,7 +30,22 @@
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
-
+	
+	<!-- Application properties -->
+	<beans:bean id="propertyConfigurer"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <beans:property name="properties" ref="appProperties" />
+    </beans:bean>
+    <beans:bean id="appProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <beans:property name="locations">
+            <beans:list>
+                <beans:value>/WEB-INF/spring/application.properties
+                </beans:value>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+    
 	<context:component-scan base-package="org.mitre.web" />
 
 	<security:global-method-security pre-post-annotations="enabled" proxy-target-class="true" authentication-manager-ref="authenticationManager"/>
@@ -53,18 +68,18 @@
 		<security:authentication-provider ref="openIdConnectAuthenticationProvider" />
 	</security:authentication-manager>
 
-	<beans:bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OpenIdConnectAuthenticationProvider" />
+	<beans:bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OIDCAuthenticationProvider" />
 
 	<beans:bean id="openIdConnectAuthenticationFilter" class="org.mitre.openid.connect.client.OIDCAuthenticationFilter">
 		<beans:property name="authenticationManager" ref="authenticationManager" />
 		<beans:property name="errorRedirectURI" value="/login.jsp?authfail=openid" />
-		<beans:property name="authorizationEndpointUrl"	value="http://idp.example.org:8080/openid-connect-server/authorize" />
-		<beans:property name="tokenEndpointUrl"	value="http://idp.example.org:8080/openid-connect-server/token" />
+		<beans:property name="authorizationEndpointUrl"	value="${idp.url}/openid-connect-server/authorize" />
+		<beans:property name="tokenEndpointUrl"	value="${idp.url}/openid-connect-server/token" />
 		<beans:property name="clientId" value="client" />
 		<beans:property name="clientSecret" value="secret" />
-		<beans:property name="jwkSigningUrl" value="http://idp.example.org:8080/openid-connect-server/jwk" />
-		<beans:property name="userInfoUrl" value="http://idp.example.org:8080/openid-connect-server/userinfo" />
-		<beans:property name="issuer" value="http://idp.example.org:8080/openid-connect-server" />
+		<beans:property name="jwkSigningUrl" value="${idp.url}/openid-connect-server/jwk" />
+		<beans:property name="userInfoUrl" value="${idp.url}/openid-connect-server/userinfo" />
+		<beans:property name="issuer" value="${idp.url}/openid-connect-server" />
 		<beans:property name="scope" value="profile email address phone" />
 	</beans:bean>
 
