@@ -82,7 +82,7 @@
 		<beans:property name="clientSecret" value="secret" />
 		<beans:property name="jwkSigningUrl" value="${idp.url}jwk" />
 		<beans:property name="userInfoUrl" value="${idp.url}userinfo" />
-		<beans:property name="scope" value="profile email address phone" />
+		<beans:property name="scope" value="openid profile email address phone" />
 	</beans:bean>
 
 </beans:beans>
