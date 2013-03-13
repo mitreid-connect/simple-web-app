@@ -68,6 +68,8 @@
 		<security:authentication-provider ref="openIdConnectAuthenticationProvider" />
 	</security:authentication-manager>
 
+	<beans:bean id="validatorCache" class="org.mitre.jwt.signer.service.impl.JWKSetSigningAndValidationServiceCacheService"/>
+
 	<beans:bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OIDCAuthenticationProvider" />
 
 	<beans:bean id="openIdConnectAuthenticationFilter" class="org.mitre.openid.connect.client.OIDCAuthenticationFilter">
