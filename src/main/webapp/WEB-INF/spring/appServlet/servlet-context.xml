@@ -73,16 +73,58 @@
 	<beans:bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OIDCAuthenticationProvider" />
 
 	<beans:bean id="openIdConnectAuthenticationFilter" class="org.mitre.openid.connect.client.OIDCAuthenticationFilter">
-		<beans:property name="issuer" value="${idp.url}" />
 		<beans:property name="authenticationManager" ref="authenticationManager" />
-		<beans:property name="errorRedirectURI" value="/login.jsp?authfail=openid" />
-		<beans:property name="authorizationEndpointUrl"	value="${idp.url}authorize" />
-		<beans:property name="tokenEndpointUrl"	value="${idp.url}token" />
-		<beans:property name="clientId" value="client" />
-		<beans:property name="clientSecret" value="secret" />
-		<beans:property name="jwkSigningUrl" value="${idp.url}jwk" />
-		<beans:property name="userInfoUrl" value="${idp.url}userinfo" />
-		<beans:property name="scope" value="openid profile email address phone" />
+		<beans:property name="serverConfigurationService">
+			<beans:bean class="org.mitre.openid.connect.client.service.impl.StaticServerConfigurationService">
+				<beans:property name="servers">
+					<beans:map>
+						<beans:entry key="${idp.url}">
+							<beans:bean class="org.mitre.openid.connect.config.ServerConfiguration">
+								<beans:property name="issuer" value="${idp.url}" />
+								<beans:property name="authorizationEndpointUri"	value="${idp.url}authorize" />
+								<beans:property name="tokenEndpointUri"	value="${idp.url}token" />
+								<beans:property name="userInfoUri" value="${idp.url}userinfo" />
+								<beans:property name="jwksUri" value="${idp.url}jwk" />
+							</beans:bean>
+						</beans:entry>
+					</beans:map>
+				</beans:property>
+			</beans:bean>
+		</beans:property>
+		<beans:property name="clientConfigurationService">
+			<beans:bean class="org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService">
+				<beans:property name="clients">
+					<beans:map>
+						<beans:entry key="${idp.url}">
+							<beans:bean class="org.springframework.security.oauth2.provider.BaseClientDetails">
+								<beans:property name="clientId" value="client" />
+								<beans:property name="clientSecret" value="secret" />
+								<beans:property name="scope">
+									<beans:set value-type="java.lang.String">
+										<beans:value>openid</beans:value>
+										<beans:value>email</beans:value>
+										<beans:value>address</beans:value>
+										<beans:value>profile</beans:value>
+										<beans:value>phone</beans:value>
+									</beans:set>
+								</beans:property>
+							</beans:bean>
+						</beans:entry>
+					</beans:map>
+				</beans:property>
+			</beans:bean>
+		</beans:property>
+		<beans:property name="issuerService">
+			<beans:bean class="org.mitre.openid.connect.client.service.impl.StaticSingleIssuerService">
+				<beans:property name="issuer" value="${idp.url}" />
+			</beans:bean>
+		</beans:property>
+		<beans:property name="authRequestUrlBuilder">
+			<beans:bean class="org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder" />
+		</beans:property>
 	</beans:bean>
 
+<!-- 
+		<beans:property name="errorRedirectURI" value="/login.jsp?authfail=openid" />
+-->
 </beans:beans>
