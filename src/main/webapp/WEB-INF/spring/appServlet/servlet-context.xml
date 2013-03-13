@@ -96,7 +96,7 @@
 				<beans:property name="clients">
 					<beans:map>
 						<beans:entry key="${idp.url}">
-							<beans:bean class="org.springframework.security.oauth2.provider.BaseClientDetails">
+							<beans:bean class="org.mitre.oauth2.model.ClientDetailsEntity">
 								<beans:property name="clientId" value="client" />
 								<beans:property name="clientSecret" value="secret" />
 								<beans:property name="scope">
@@ -123,6 +123,7 @@
 			<beans:bean class="org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder" />
 		</beans:property>
 	</beans:bean>
+	<beans:bean id="validatorCache" class="org.mitre.jwt.signer.service.impl.JWKSetSigningAndValidationServiceCacheService" /> 
 
 <!-- 
 		<beans:property name="errorRedirectURI" value="/login.jsp?authfail=openid" />
