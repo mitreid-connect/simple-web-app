@@ -119,33 +119,33 @@
 		</beans:property>
 		<beans:property name="authRequestUrlBuilder">
 			<beans:bean class="org.mitre.openid.connect.client.service.impl.SignedAuthRequestUrlBuilder">
-				<beans:property name="signingAndValidationService">
-					<beans:bean id="defaultsignerService" class="org.mitre.jwt.signer.service.impl.DefaultJwtSigningAndValidationService">
-						<beans:property name="builders">
-							<beans:map>
-								<beans:entry key="rsa1">
-									<beans:bean id="rsaSignerBuilder" class="org.mitre.jwt.signer.service.impl.RSASSASignerVerifierBuilder">
-										<beans:property name="keystore">
-											<beans:bean id="defaultKeystore" class="org.mitre.jwt.encryption.impl.KeyStore">
-												<beans:constructor-arg name="location" value="classpath:keystore.jks" />
-												<beans:constructor-arg name="password" value="changeit" />
-											</beans:bean>
-										</beans:property>
-										<beans:property name="alias" value="rsa" />
-										<beans:property name="password" value="changeit" />
-										<beans:property name="default" value="true" />
-									</beans:bean>
-								</beans:entry>
-							</beans:map>
-						</beans:property>
-				 		<beans:property name="defaultSigningAlgorithmName" value="RS256" />
-					</beans:bean>
-				</beans:property>
+				<beans:property name="signingAndValidationService" ref="defaultsignerService" />
 			</beans:bean>
 		</beans:property>
 	</beans:bean>
 	<beans:bean id="validatorCache" class="org.mitre.jwt.signer.service.impl.JWKSetSigningAndValidationServiceCacheService" /> 
 	
+	<beans:bean id="defaultsignerService" class="org.mitre.jwt.signer.service.impl.DefaultJwtSigningAndValidationService">
+		<beans:property name="builders">
+			<beans:map>
+				<beans:entry key="rsa1">
+					<beans:bean id="rsaSignerBuilder" class="org.mitre.jwt.signer.service.impl.RSASSASignerVerifierBuilder">
+						<beans:property name="keystore">
+							<beans:bean id="defaultKeystore" class="org.mitre.jwt.encryption.impl.KeyStore">
+								<beans:constructor-arg name="location" value="classpath:keystore.jks" />
+								<beans:constructor-arg name="password" value="changeit" />
+							</beans:bean>
+						</beans:property>
+						<beans:property name="alias" value="rsa" />
+						<beans:property name="password" value="changeit" />
+						<beans:property name="default" value="true" />
+					</beans:bean>
+				</beans:entry>
+			</beans:map>
+		</beans:property>
+ 		<beans:property name="defaultSigningAlgorithmName" value="RS256" />
+	</beans:bean>
+
 	<beans:bean id="clientKeyPublisher" class="org.mitre.openid.connect.client.keypublisher.ClientKeyPublisher">
  		<beans:property name="jwkPublishUrl" value="jwk" />
  		<beans:property name="signingAndValidationService" ref="defaultsignerService" />
