@@ -145,7 +145,12 @@
 		</beans:property>
 	</beans:bean>
 	<beans:bean id="validatorCache" class="org.mitre.jwt.signer.service.impl.JWKSetSigningAndValidationServiceCacheService" /> 
-
+	
+	<beans:bean id="clientKeyPublisher" class="org.mitre.openid.connect.client.keypublisher.ClientKeyPublisher">
+ 		<beans:property name="jwkPublishUrl" value="jwk" />
+ 		<beans:property name="signingAndValidationService" ref="defaultsignerService" />
+ 	</beans:bean>
+ 	
 <!-- 
 		<beans:property name="errorRedirectURI" value="/login.jsp?authfail=openid" />
 -->
