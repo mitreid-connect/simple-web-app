@@ -73,21 +73,7 @@
 	<bean id="openIdConnectAuthenticationFilter" class="org.mitre.openid.connect.client.OIDCAuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="serverConfigurationService">
-			<bean class="org.mitre.openid.connect.client.service.impl.StaticServerConfigurationService">
-				<property name="servers">
-					<map>
-						<entry key="${idp.url}">
-							<bean class="org.mitre.openid.connect.config.ServerConfiguration">
-								<property name="issuer" value="${idp.url}" />
-								<property name="authorizationEndpointUri"	value="${idp.url}authorize" />
-								<property name="tokenEndpointUri"	value="${idp.url}token" />
-								<property name="userInfoUri" value="${idp.url}userinfo" />
-								<property name="jwksUri" value="${idp.url}jwk" />
-							</bean>
-						</entry>
-					</map>
-				</property>
-			</bean>
+			<bean class="org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService" />
 		</property>
 		<property name="clientConfigurationService">
 			<bean class="org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService">
