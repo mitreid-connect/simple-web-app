@@ -99,9 +99,7 @@
 			</bean>
 		</property>
 		<property name="issuerService">
-			<bean class="org.mitre.openid.connect.client.service.impl.StaticSingleIssuerService">
-				<property name="issuer" value="${idp.url}" />
-			</bean>
+			<bean class="org.mitre.openid.connect.client.service.impl.WebfingerIssuerService" />
 		</property>
 		<property name="authRequestUrlBuilder">
 			<bean class="org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder" />
