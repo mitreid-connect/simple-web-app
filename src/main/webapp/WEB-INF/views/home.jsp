@@ -13,7 +13,9 @@
 :
 <a href="user">User</a>
 :
-<a href="open">Open</a>
+<a href="">Home (open)</a>
+:
+<a href="j_spring_security_logout">Logout</a>
 
 </body>
 </html>

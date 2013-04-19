@@ -5,15 +5,19 @@
 	<title>Admin</title>
 </head>
 <body>
-<h1>
-	You have logged in with access: ROLE_ADMIN  
-</h1>
+<h1>Hello <security:authentication property="principal.name" /></h1>
+
+<h2>
+	You have logged in with access: <security:authentication property="principal.authorities" />
+</h2>
 
 <a href="admin">Admin</a>
 :
 <a href="user">User</a>
 :
-<a href="open">Open</a>
+<a href="">Home (open)</a>
+:
+<a href="j_spring_security_logout">Logout</a>
 
 </body>
 </html>
