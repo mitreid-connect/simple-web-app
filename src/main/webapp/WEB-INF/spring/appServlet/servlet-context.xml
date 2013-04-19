@@ -76,25 +76,20 @@
 			<bean class="org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService" />
 		</property>
 		<property name="clientConfigurationService">
-			<bean class="org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService">
-				<property name="clients">
-					<map>
-						<entry key="${idp.url}">
-							<bean class="org.mitre.oauth2.model.ClientDetailsEntity">
-								<property name="clientId" value="client" />
-								<property name="clientSecret" value="secret" />
-								<property name="scope">
-									<set value-type="java.lang.String">
-										<value>openid</value>
-										<value>email</value>
-										<value>address</value>
-										<value>profile</value>
-										<value>phone</value>
-									</set>
-								</property>
-							</bean>
-						</entry>
-					</map>
+			<bean class="org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService">
+				<property name="template">
+					<bean class="org.mitre.oauth2.model.ClientDetailsEntity">
+						<property name="clientName" value="Simple Web App" />
+						<property name="scope">
+							<set value-type="java.lang.String">
+								<value>openid</value>
+								<value>email</value>
+								<value>address</value>
+								<value>profile</value>
+								<value>phone</value>
+							</set>
+						</property>
+					</bean>
 				</property>
 			</bean>
 		</property>
