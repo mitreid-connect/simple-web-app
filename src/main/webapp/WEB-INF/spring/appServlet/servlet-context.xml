@@ -68,7 +68,21 @@
 		<security:authentication-provider ref="openIdConnectAuthenticationProvider" />
 	</security:authentication-manager>
 
-	<bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OIDCAuthenticationProvider" />
+	<bean id="openIdConnectAuthenticationProvider" class="org.mitre.openid.connect.client.OIDCAuthenticationProvider">
+		<property name="authoritiesMapper">
+			<bean class="org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper">
+				<property name="admins">
+					<set>
+					<!-- This is an example of how to set up a user as an administrator: they'll be given ROLE_ADMIN in addition to ROLE_USER -->
+						<bean class="org.mitre.openid.connect.client.SubjectIssuerGrantedAuthority">
+							<constructor-arg name="subject" value="${admin.sub}" />
+							<constructor-arg name="issuer" value="${admin.iss}" />
+						</bean>
+					</set>
+				</property>
+			</bean>
+		</property>
+	</bean>
 
 	<bean id="openIdConnectAuthenticationFilter" class="org.mitre.openid.connect.client.OIDCAuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
