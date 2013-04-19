@@ -1,5 +1,4 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
@@ -7,10 +6,10 @@
 </head>
 <body>
 
-<h1>Hello <security:authentication property="principal.name" /></h1>
+<h1>Hello <security:authentication property="userInfo.name" /> (<security:authentication property="name" />)</h1>
 
 <h2>
-	You have logged in with access: <security:authentication property="principal.authorities" />
+	You have logged in with access: <security:authentication property="authorities" />
 </h2>
 
 
