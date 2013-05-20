@@ -118,7 +118,7 @@
 		<dependency>
 			<groupId>org.mitre</groupId>
 			<artifactId>openid-connect-client</artifactId>
-			<version>0.9.2</version>
+			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 	<build>

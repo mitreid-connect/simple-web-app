@@ -92,7 +92,7 @@
 		<property name="clientConfigurationService">
 			<bean class="org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService">
 				<property name="template">
-					<bean class="org.mitre.oauth2.model.ClientDetailsEntity">
+					<bean class="org.mitre.oauth2.model.RegisteredClient">
 						<property name="clientName" value="Simple Web App" />
 						<property name="scope">
 							<set value-type="java.lang.String">
@@ -103,9 +103,42 @@
 								<value>phone</value>
 							</set>
 						</property>
+						<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" />
+						<property name="redirectUris">
+							<set>
+								<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
+							</set>
+						</property>
 					</bean>
 				</property>
 			</bean>
+<!-- 	<bean class="org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService"> -->
+<!-- 		<property name="clients"> -->
+<!-- 			<map> -->
+<!-- 				<entry key="${idp.url}"> -->
+<!-- 					<bean class="org.mitre.oauth2.model.RegisteredClient"> -->
+<!-- 						<property name="clientId" value="client" /> -->
+<!-- 						<property name="clientSecret" value="secret" /> -->
+<!-- 						<property name="scope"> -->
+<!-- 							<set value-type="java.lang.String"> -->
+<!-- 								<value>openid</value> -->
+<!-- 								<value>email</value> -->
+<!-- 								<value>address</value> -->
+<!-- 								<value>profile</value> -->
+<!-- 								<value>phone</value> -->
+<!-- 							</set> -->
+<!-- 						</property> -->
+<!-- 						<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" /> -->
+<!-- 						<property name="redirectUris"> -->
+<!-- 							<set> -->
+<!-- 								<value>http://localhost:8080/simple-web-app/openid_connect_login</value> -->
+<!-- 							</set> -->
+<!-- 						</property> -->
+<!-- 					</bean> -->
+<!-- 				</entry> -->
+<!-- 			</map> -->
+<!--   </property> -->
+<!-- </bean> -->
 		</property>
 		<property name="issuerService">
 			<bean class="org.mitre.openid.connect.client.service.impl.WebfingerIssuerService">
