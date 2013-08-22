@@ -109,6 +109,7 @@
 								<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
 							</set>
 						</property>
+						<property name="jwksUri" value="http://localhost:8080/simple-web-app/jwk" />
 					</bean>
 				</property>
 			</bean>
@@ -145,11 +146,38 @@
 				<property name="loginPageUrl" value="login" />
 			</bean>
 		</property>
+		<property name="authRequestOptionsService">
+			<bean class="org.mitre.openid.connect.client.service.impl.StaticAuthRequestOptionsService">
+				<property name="options">
+					<map>
+						<entry key="display" value="page" />
+						<entry key="prompt" value="consent" />
+					</map>
+				</property>
+			</bean>
+		</property>
 		<property name="authRequestUrlBuilder">
-			<bean class="org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder" />
+			<bean class="org.mitre.openid.connect.client.service.impl.SignedAuthRequestUrlBuilder">
+			  <property name="signingAndValidationService" ref="defaultsignerService" />
+			</bean>
 		</property>
 	</bean>
 
-	<bean id="validatorCache" class="org.mitre.jwt.signer.service.impl.JWKSetSigningAndValidationServiceCacheService" />
+	<bean id="defaultsignerService" class="org.mitre.jwt.signer.service.impl.DefaultJwtSigningAndValidationService">
+		<constructor-arg name="keyStore">
+			<bean id="defaultKeyStore" class="org.mitre.jose.keystore.JWKSetKeyStore">
+				<property name="location" value="classpath:keystore.jwks" />
+			</bean>
+		</constructor-arg>
+		<property name="defaultSignerKeyId" value="rsa1" />
+ 		<property name="defaultSigningAlgorithmName" value="RS256" />
+	</bean>
+	
+	<bean id="clientKeyPublisher" class="org.mitre.openid.connect.client.keypublisher.ClientKeyPublisher">
+ 		<property name="jwkPublishUrl" value="jwk" />
+ 		<property name="signingAndValidationService" ref="defaultsignerService" />
+ 	</bean>
+ 	
+ 	<bean id="validatorCache" class="org.mitre.jwt.signer.service.impl.JWKSetSigningAndValidationServiceCacheService" />
 	 
 </beans>
