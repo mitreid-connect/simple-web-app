@@ -150,6 +150,6 @@
 		</property>
 	</bean>
 
-	<bean id="validatorCache" class="org.mitre.jwt.signer.service.impl.JWKSetSigningAndValidationServiceCacheService" />
+	<bean id="validatorCache" class="org.mitre.jwt.signer.service.impl.JWKSetCacheService" />
 	 
 </beans>
