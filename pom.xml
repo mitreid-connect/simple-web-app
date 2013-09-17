@@ -115,11 +115,14 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- MITREid Connect -->
 		<dependency>
 			<groupId>org.mitre</groupId>
 			<artifactId>openid-connect-client</artifactId>
 			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
+		
 	</dependencies>
 	<build>
 		<plugins>

@@ -163,12 +163,12 @@
 		</property>
 	</bean>
 
+	<bean id="defaultKeyStore" class="org.mitre.jose.keystore.JWKSetKeyStore">
+		<property name="location" value="classpath:keystore.jwks" />
+	</bean>
+
 	<bean id="defaultsignerService" class="org.mitre.jwt.signer.service.impl.DefaultJwtSigningAndValidationService">
-		<constructor-arg name="keyStore">
-			<bean id="defaultKeyStore" class="org.mitre.jose.keystore.JWKSetKeyStore">
-				<property name="location" value="classpath:keystore.jwks" />
-			</bean>
-		</constructor-arg>
+		<constructor-arg name="keyStore" ref="defaultKeyStore" />
 		<property name="defaultSignerKeyId" value="rsa1" />
  		<property name="defaultSigningAlgorithmName" value="RS256" />
 	</bean>
