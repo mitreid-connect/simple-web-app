@@ -11,8 +11,16 @@
 		<org.springframework-version>3.2.3.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.9</org.aspectj-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
+		<spring.security.version>3.1.4.RELEASE</spring.security.version>
+		<mitreid-connect-version>1.1.0-SNAPSHOT</mitreid-connect-version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.mitre</groupId>
+			<artifactId>openid-connect-client</artifactId>
+			<version>${mitreid-connect-version}</version>
+		</dependency>
+
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -115,11 +123,18 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.mitre</groupId>
-			<artifactId>openid-connect-client</artifactId>
-			<version>1.1.0-SNAPSHOT</version>
-		</dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+            <version>${spring.security.version}</version>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.springframework</groupId>
+            		<artifactId>*</artifactId>
+            	</exclusion>
+            </exclusions>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>
