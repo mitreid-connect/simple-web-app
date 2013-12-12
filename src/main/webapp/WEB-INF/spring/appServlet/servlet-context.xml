@@ -86,14 +86,165 @@
 
 	<bean id="openIdConnectAuthenticationFilter" class="org.mitre.openid.connect.client.OIDCAuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
-		<property name="serverConfigurationService">
-			<bean class="org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService" />
+
+		<property name="issuerService" ref="webfingerIssuerService" />
+		<property name="serverConfigurationService" ref="dynamicServerConfigurationService" />
+		<property name="clientConfigurationService" ref="dynamicClientConfigurationService" />
+		<property name="authRequestOptionsService" ref="staticAuthRequestOptionsService" />
+		<property name="authRequestUrlBuilder" ref="plainAuthRequestUrlBuilder" />
+		
+	</bean>
+
+
+
+	<!-- 
+	  -
+	  -	Issuer Services: Determine which identity provider issuer is used.
+	  -	
+	  -->
+
+
+	<!-- 
+		Static issuer service, returns the same issuer for every request.
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.StaticSingleIssuerService" id="staticIssuerService">
+		<property name="issuer" value="http://localhost:8080/openid-connect-server-webapp/" />
+	</bean>	
+
+	<!-- 
+		WebFinger issuer service, does OpenID Connect Discovery on user-entered text (received from the
+		loginPageUrl page) to find the issuer. The login page needs to return the user-entered text
+		as the "identifier" parameter as a query parameter.
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.WebfingerIssuerService" id="webfingerIssuerService">
+		<property name="loginPageUrl" value="login" />
+	</bean>
+
+	<!--
+		Third-party (account chooser) issuer service. Looks for the "iss" value on the request
+		and returns that as the issuer. If there is no "iss" value, redirects to the configured
+		account chooser URI. This URI should direct back to the login filter URL with an
+		"iss" value as a query parameter. 
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.ThirdPartyIssuerService">
+	  <property name="accountChooserUrl" value="http://localhost/account-chooser/" />
+	</bean>
+	
+	
+	
+	<!--
+	  -
+	  - Server configuration: determines the parameters and URLs of the server to talk to.	  
+	  - 
+	  -->
+
+	<!-- 
+		Static server configuration, contains a map of server configuration objects keyed by the issuer URL.
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.StaticServerConfigurationService">
+		<property name="servers">
+			<map>
+				<entry key="http://localhost:8080/openid-connect-server-webapp/">
+					<bean class="org.mitre.openid.connect.config.ServerConfiguration">
+						<property name="issuer" value="http://localhost:8080/openid-connect-server-webapp/" />
+						<property name="authorizationEndpointUri"	value="$http://localhost:8080/openid-connect-server-webapp/authorize" />
+						<property name="tokenEndpointUri"	value="http://localhost:8080/openid-connect-server-webapp/token" />
+						<property name="userInfoUri" value="http://localhost:8080/openid-connect-server-webapp/userinfo" />
+						<property name="jwksUri" value="http://localhost:8080/openid-connect-server-webapp/jwk" />
+					</bean>
+				</entry>
+			</map>
 		</property>
-		<property name="clientConfigurationService">
-			<bean class="org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService">
-				<property name="template">
+	</bean>
+
+	<!-- 
+		Dynamic server configuration, fetches the server's information using OIDC Discovery.
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService" id="dynamicServerConfigurationService" />
+
+	<!-- 
+		Hybrid server configuration. Tries to look up a statically configured server in the map, does
+		dynamic OIDC Discovery if the static lookup fails.
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.HybridServerConfigurationService">
+		<property name="servers">
+			<map>
+				<entry key="http://localhost:8080/openid-connect-server-webapp/">
+					<bean class="org.mitre.openid.connect.config.ServerConfiguration">
+						<property name="issuer" value="http://localhost:8080/openid-connect-server-webapp/" />
+						<property name="authorizationEndpointUri"	value="$http://localhost:8080/openid-connect-server-webapp/authorize" />
+						<property name="tokenEndpointUri"	value="http://localhost:8080/openid-connect-server-webapp/token" />
+						<property name="userInfoUri" value="http://localhost:8080/openid-connect-server-webapp/userinfo" />
+						<property name="jwksUri" value="http://localhost:8080/openid-connect-server-webapp/jwk" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	
+	
+	
+	
+	<!-- 
+	  -
+	  -	Client Configuration: Determine which client identifier and credentials are used.
+	  -
+	  -->
+	
+	
+	<!-- 
+		Dynamic Client Configuration, uses dynamic client registration. This version stores the registered
+	    clients in an in-memory map. To override, add a bean to the registeredClientService property.
+	-->
+
+	<bean class="org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService" id="dynamicClientConfigurationService">
+		<property name="template">
+			<bean class="org.mitre.oauth2.model.RegisteredClient">
+				<property name="clientName" value="Simple Web App" />
+				<property name="scope">
+					<set value-type="java.lang.String">
+						<value>openid</value>
+						<value>email</value>
+						<value>address</value>
+						<value>profile</value>
+						<value>phone</value>
+					</set>
+				</property>
+				<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" />
+				<property name="redirectUris">
+					<set>
+						<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
+					</set>
+				</property>
+			</bean>
+		</property>
+		<!-- 
+			Registered Client Service. Uncomment this to save dynamically registered clients out to a
+			file on disk (indicated by the filename property) or replace this with another implementation
+			of RegisteredClientService. This defaults to an in-memory implementation of RegisteredClientService
+			which will forget and re-register all clients on restart.
+		-->
+		<!--
+		<property name="registeredClientService">
+			<bean class="org.mitre.openid.connect.client.service.impl.JsonFileRegisteredClientService">
+				<constructor-arg name="filename" value="/tmp/simple-web-app-clients.json" />
+			</bean>
+		</property>
+		 -->
+	</bean>
+
+	<!--
+		Static Client Configuration. Configures a client statically by storing configuration on a per-issuer basis.
+	-->
+
+	<bean class="org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService" id="staticClientConfigurationService">
+		<property name="clients">
+			<map>
+				<entry key="http://localhost:8080/openid-connect-server-webapp/">
 					<bean class="org.mitre.oauth2.model.RegisteredClient">
-						<property name="clientName" value="Simple Web App" />
+						<property name="clientId" value="client" />
+						<property name="clientSecret" value="secret" />
 						<property name="scope">
 							<set value-type="java.lang.String">
 								<value>openid</value>
@@ -110,46 +261,160 @@
 							</set>
 						</property>
 					</bean>
+				</entry>
+			</map>
+  		</property>
+	</bean>
+	
+	<!--
+		Hybrid Client Configuration. Tries to configure a client statically first, but if a client isn't found in the map,
+		it will dynamically configure one. 
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.HybridClientConfigurationService" id="hybridClientConfigurationService">
+		<property name="clients">
+			<map>
+				<entry key="http://localhost:8080/openid-connect-server-webapp/">
+					<bean class="org.mitre.oauth2.model.RegisteredClient">
+						<property name="clientId" value="client" />
+						<property name="clientSecret" value="secret" />
+						<property name="scope">
+							<set value-type="java.lang.String">
+								<value>openid</value>
+								<value>email</value>
+								<value>address</value>
+								<value>profile</value>
+								<value>phone</value>
+							</set>
+						</property>
+						<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" />
+						<property name="redirectUris">
+							<set>
+								<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
+							</set>
+						</property>
+					</bean>
+				</entry>
+			</map>
+  		</property>
+		<property name="template">
+			<bean class="org.mitre.oauth2.model.RegisteredClient">
+				<property name="clientName" value="Simple Web App" />
+				<property name="scope">
+					<set value-type="java.lang.String">
+						<value>openid</value>
+						<value>email</value>
+						<value>address</value>
+						<value>profile</value>
+						<value>phone</value>
+					</set>
+				</property>
+				<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" />
+				<property name="redirectUris">
+					<set>
+						<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
+					</set>
 				</property>
 			</bean>
-<!-- 	<bean class="org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService"> -->
-<!-- 		<property name="clients"> -->
-<!-- 			<map> -->
-<!-- 				<entry key="${idp.url}"> -->
-<!-- 					<bean class="org.mitre.oauth2.model.RegisteredClient"> -->
-<!-- 						<property name="clientId" value="client" /> -->
-<!-- 						<property name="clientSecret" value="secret" /> -->
-<!-- 						<property name="scope"> -->
-<!-- 							<set value-type="java.lang.String"> -->
-<!-- 								<value>openid</value> -->
-<!-- 								<value>email</value> -->
-<!-- 								<value>address</value> -->
-<!-- 								<value>profile</value> -->
-<!-- 								<value>phone</value> -->
-<!-- 							</set> -->
-<!-- 						</property> -->
-<!-- 						<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" /> -->
-<!-- 						<property name="redirectUris"> -->
-<!-- 							<set> -->
-<!-- 								<value>http://localhost:8080/simple-web-app/openid_connect_login</value> -->
-<!-- 							</set> -->
-<!-- 						</property> -->
-<!-- 					</bean> -->
-<!-- 				</entry> -->
-<!-- 			</map> -->
-<!--   </property> -->
-<!-- </bean> -->
 		</property>
-		<property name="issuerService">
-			<bean class="org.mitre.openid.connect.client.service.impl.WebfingerIssuerService">
-				<property name="loginPageUrl" value="login" />
+		<!-- 
+			Registered Client Service. Uncomment this to save dynamically registered clients out to a
+			file on disk (indicated by the filename property) or replace this with another implementation
+			of RegisteredClientService. This defaults to an in-memory implementation of RegisteredClientService
+			which will forget and re-register all clients on restart. 
+		-->
+		<!--
+		<property name="registeredClientService">
+			<bean class="org.mitre.openid.connect.client.service.impl.JsonFileRegisteredClientService">
+				<constructor-arg name="filename" value="/tmp/simple-web-app-clients.json" />
 			</bean>
 		</property>
-		<property name="authRequestUrlBuilder">
-			<bean class="org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder" />
+		 -->
+	</bean>
+
+
+	<!--
+	  -
+	  -	Auth request options service: returns the optional components of the request
+	  - 
+	  -->
+	<bean class="org.mitre.openid.connect.client.service.impl.StaticAuthRequestOptionsService" id="staticAuthRequestOptionsService">
+		<property name="options">
+			<map>
+				<!-- Entries in this map are sent as key-value parameters to the auth request -->
+				<!-- 
+				<entry key="display" value="page" />
+				<entry key="prompt" value="consent" />
+				-->
+			</map>
 		</property>
 	</bean>
 
+	<!--
+	  -
+	  - Authorization URL Builders: create the URL to redirect the user to for authorization.
+	  - 
+	  -->
+
+	<!--	
+		Plain authorization request builder, puts all options as query parameters on the GET request
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder" id="plainAuthRequestUrlBuilder" />
+	
+	<!--
+		Signed authorization request builder, puts all options as elements in a JWS-signed request object 
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.SignedAuthRequestUrlBuilder">
+	  <property name="signingAndValidationService" ref="defaultSignerService" />
+	</bean>
+
+	<!-- 
+		Encrypted authorization request builder, puts all the options as elements in a JWE-encrypted request object
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.EncryptedAuthRequestUrlBuilder">
+	  <property name="encrypterService" ref="validatorCache" />
+	    <property name="alg">
+	      <util:constant static-field="com.nimbusds.jose.JWEAlgorithm.RSA1_5"/>
+	    </property>
+	    <property name="enc">
+	      <util:constant static-field="com.nimbusds.jose.EncryptionMethod.A128GCM"/>
+	    </property>
+	</bean>
+
+
+
+
+	<!-- 
+	 - 
+	 - Utility beans for the above classes
+	 -
+	 -->
+
+	<!-- 
+		This service fetches and caches JWK sets from URLs.
+	-->
+	
 	<bean id="validatorCache" class="org.mitre.jwt.signer.service.impl.JWKSetCacheService" />
-	 
+	
+	<!-- 
+		This service sets up a bunch of signers and validators based on our own keys.
+		Replace this keystore's contents for a production deployment.
+	 -->
+	<bean id="defaultSignerService" class="org.mitre.jwt.signer.service.impl.DefaultJwtSigningAndValidationService">
+		<constructor-arg name="keyStore">
+			<bean id="defaultKeyStore" class="org.mitre.jose.keystore.JWKSetKeyStore">
+				<property name="location" value="classpath:keystore.jwks" />
+			</bean>
+		</constructor-arg>
+		<property name="defaultSignerKeyId" value="rsa1" />
+ 		<property name="defaultSigningAlgorithmName" value="RS256" />
+	</bean>
+
+	<!-- 
+		This service publishes the client's public key on a the endpoint "jwk" off the root of this client.
+	-->	
+	<bean id="clientKeyPublisher" class="org.mitre.openid.connect.client.keypublisher.ClientKeyPublisher">
+ 		<property name="jwkPublishUrl" value="jwk" />
+ 		<property name="signingAndValidationService" ref="defaultSignerService" />
+ 	</bean>
+ 		 
 </beans>
