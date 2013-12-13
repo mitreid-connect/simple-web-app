@@ -73,21 +73,34 @@
 			<bean class="org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper">
 				<property name="admins">
 					<set>
-					<!-- This is an example of how to set up a user as an administrator: they'll be given ROLE_ADMIN in addition to ROLE_USER -->
+					<!-- 
+						This is an example of how to set up a user as an administrator: they'll be given ROLE_ADMIN in addition to ROLE_USER.
+						Note that having an administrator role on the IdP doesn't grant administrator access on this client.
+					-->
+					<!-- 
 						<bean class="org.mitre.openid.connect.client.SubjectIssuerGrantedAuthority">
 							<constructor-arg name="subject" value="${admin.sub}" />
 							<constructor-arg name="issuer" value="${admin.iss}" />
 						</bean>
+					-->
 					</set>
 				</property>
 			</bean>
 		</property>
 	</bean>
 
+
+
+
+	<!-- 
+	  -
+	  - The authentication filter
+	  -	
+	  -->
 	<bean id="openIdConnectAuthenticationFilter" class="org.mitre.openid.connect.client.OIDCAuthenticationFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 
-		<property name="issuerService" ref="webfingerIssuerService" />
+		<property name="issuerService" ref="hybridIssuerService" />
 		<property name="serverConfigurationService" ref="dynamicServerConfigurationService" />
 		<property name="clientConfigurationService" ref="dynamicClientConfigurationService" />
 		<property name="authRequestOptionsService" ref="staticAuthRequestOptionsService" />
@@ -121,7 +134,7 @@
 	</bean>
 
 	<!--
-		Third-party (account chooser) issuer service. Looks for the "iss" value on the request
+		Third-party (account chooser) issuer service. Looks for the "iss" parameter on the request
 		and returns that as the issuer. If there is no "iss" value, redirects to the configured
 		account chooser URI. This URI should direct back to the login filter URL with an
 		"iss" value as a query parameter. 
@@ -130,6 +143,16 @@
 	  <property name="accountChooserUrl" value="http://localhost/account-chooser/" />
 	</bean>
 	
+	<!--
+		Hybrid issuer service. If an issuer is passed in directly with the "iss" parameter, it will use that. If not, it will
+		look for an "identifier" parameter to do Webfinger discovery on that. Failing that, it will redirect to the login
+		page URL.
+	-->
+	<bean class="org.mitre.openid.connect.client.service.impl.HybridIssuerService" id="hybridIssuerService">
+		<property name="loginPageUrl" value="login" />
+	</bean>
+
+
 	
 	
 	<!--
