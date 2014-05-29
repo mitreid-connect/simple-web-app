@@ -42,7 +42,7 @@
 								<li class="active"><a href="#">Home</a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="home">Home</a></li>
+								<li><a href=".">Home</a></li>
 							</c:otherwise>
 						</c:choose>
 						<c:choose>
