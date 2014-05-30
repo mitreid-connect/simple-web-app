@@ -20,9 +20,17 @@ import java.security.Principal;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Set;
 
+import javax.annotation.Resource;
+
+import org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper;
+import org.mitre.openid.connect.client.OIDCAuthenticationFilter;
+import org.mitre.openid.connect.client.SubjectIssuerGrantedAuthority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,20 +45,29 @@ public class HomeController {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+	// filter reference so we can get class names and things like that.
+	@Autowired
+	private OIDCAuthenticationFilter filter;
+	
+	@Resource(name = "namedAdmins")
+	private Set<SubjectIssuerGrantedAuthority> admins;
+	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model, Principal p) {
-		logger.info("Welcome home! the client locale is "+ locale.toString());
 
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-
-		String formattedDate = dateFormat.format(date);
-
-		model.addAttribute("serverTime", formattedDate );
-
+		model.addAttribute("issuerServiceClass", filter.getIssuerService().getClass().getSimpleName());
+		model.addAttribute("serverConfigurationServiceClass", filter.getServerConfigurationService().getClass().getSimpleName());
+		model.addAttribute("clientConfigurationServiceClass", filter.getClientConfigurationService().getClass().getSimpleName());
+		model.addAttribute("authRequestOptionsServiceClass", filter.getAuthRequestOptionsService().getClass().getSimpleName());
+		model.addAttribute("authRequestUriBuilderClass", filter.getAuthRequestUrlBuilder().getClass().getSimpleName());
+		
+		if (admins != null) {
+			model.addAttribute("admins", admins);
+		}
+		
 		return "home";
 	}
 
