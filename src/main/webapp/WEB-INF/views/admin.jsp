@@ -8,19 +8,42 @@
 	<div class="row-fluid">
 		<div class="span10 offset1">
 
-<h1>Hello <security:authentication property="userInfo.name" /> (<security:authentication property="name" />)</h1>
+			<h1>Hello ${ userInfo.name }</h1>
 
-<h2>
-	You have logged in with access: <security:authentication property="authorities" />
-</h2>
+			<div>
+				<p>This page requires that the user be logged in with a valid account and the <code>ROLE_ADMIN</code> Spring Security authority.
+				If you are reading this page, <span class="text-success">you are currently logged in as an administrator</span>.</p>
 
-<a href="admin">Admin</a>
-:
-<a href="user">User</a>
-:
-<a href="">Home (open)</a>
-:
-<a href="j_spring_security_logout">Logout</a>
+				<p>The authorization provider will assign your account a set of authorities depending on how it's configured.
+				Your current login has the following Spring Security authorities:</p>
+				
+				<ul>
+					<security:authentication property="authorities" var="authorities" />
+					<c:forEach items="${authorities}" var="auth">
+						<li><code>${ auth }</code></li>
+					</c:forEach>
+				</ul>
+				
+			</div>
+			<div>
+				<h3>Administrators</h3>
+				
+				<p>Logged in users are assigned the <code>ROLE_USER</code> authority by default, but the following users
+				 (identified by issuer/subject pairs) will also be given <code>ROLE_ADMIN</code>:</p>
+				
+				<table class="table table-striped table-hover span4">
+					<tr>
+						<th>Issuer</th>
+						<th>Subject</th>
+					</tr>
+					<c:forEach items="${ admins }" var="admin">
+						<tr>
+							<td>${ admin.issuer }</td>
+							<td>${ admin.subject }</td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
 
 		</div>
 	</div>

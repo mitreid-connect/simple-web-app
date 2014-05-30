@@ -17,20 +17,16 @@
 package org.mitre.web;
 
 import java.security.Principal;
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper;
 import org.mitre.openid.connect.client.OIDCAuthenticationFilter;
 import org.mitre.openid.connect.client.SubjectIssuerGrantedAuthority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,10 +60,8 @@ public class HomeController {
 		model.addAttribute("authRequestOptionsServiceClass", filter.getAuthRequestOptionsService().getClass().getSimpleName());
 		model.addAttribute("authRequestUriBuilderClass", filter.getAuthRequestUrlBuilder().getClass().getSimpleName());
 		
-		if (admins != null) {
-			model.addAttribute("admins", admins);
-		}
-		
+		model.addAttribute("admins", admins);
+
 		return "home";
 	}
 
@@ -84,7 +78,10 @@ public class HomeController {
 
 	@RequestMapping("/admin")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public String admin(Principal p) {
+	public String admin(Model model, Principal p) {
+
+		model.addAttribute("admins", admins);
+
 		return "admin";
 	}
 
