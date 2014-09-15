@@ -25,7 +25,7 @@
 		</c:choose>
 	</c:otherwise>
 </c:choose>
-<div class="navbar">
+<div class="navbar navbar-inverse">
 	<div class="navbar-inner">
 		<div class="container">
 			<button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -73,20 +73,22 @@
 					</ul>
 					<ul class="nav pull-right">
 	                    <security:authorize access="hasRole('ROLE_USER')">
-						<div class="btn-group">
-							<a class="btn btn-primary btn-small dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user icon-white"></i> ${ shortName } <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a>${ longName }</a></li>
+						<li class="dropdown">
+							<a id="userButton" class="dropdown-toggle" data-toggle="dropdown" href=""><i class="icon-user icon-white"></i> ${ shortName } <span class="caret"></span></a>
+							<ul class="dropdown-menu pull-right">
+								<li><a href="user" data-toggle="collapse" data-target=".nav-collapse">${ longName }</a></li>
 								<li class="divider"></li>
-								<li><a href="j_spring_security_logout"><i class="icon-remove"></i> Log out</a></li>
+								<li><a href="j_spring_security_logout" data-toggle="collapse" data-target=".nav-collapse"><i class="icon-remove"></i> Log out</a></li>
 							</ul>
-						</div>
+						</li>
 	                    </security:authorize>
 	                    <security:authorize access="!hasRole('ROLE_USER')">
-	                    	<a class="btn btn-primary btn-small" href="login"><i class="icon-user icon-white"></i> Log in</a>
+	                    <li>
+	                    	<a id="loginButton" href="login" data-toggle="collapse" data-target=".nav-collapse"><i class="icon-lock icon-white"></i> Log in</a>
+	                    </li>
 	                    </security:authorize>
 	                </ul>
-	                    
+
 	            </div><!--/.nav-collapse -->
 			</c:if>
         </div>
