@@ -243,6 +243,9 @@
 						<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
 					</set>
 				</property>
+				<!-- for signed requests -->
+				<property name="requestObjectSigningAlg" value="RS256" />
+				<property name="jwksUri" value="http://localhost:8080/simple-web-app/jwk" />
 			</bean>
 		</property>
 		<!-- 
@@ -318,6 +321,7 @@
 								<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
 							</set>
 						</property>
+						
 					</bean>
 				</entry>
 			</map>
@@ -369,7 +373,8 @@
 				<!-- Entries in this map are sent as key-value parameters to the auth request -->
 				<!-- 
 				<entry key="display" value="page" />
-				<entry key="prompt" value="consent" />
+				<entry key="max_age" value="30" />
+				<entry key="prompt" value="none" />
 				-->
 			</map>
 		</property>
@@ -389,14 +394,14 @@
 	<!--
 		Signed authorization request builder, puts all options as elements in a JWS-signed request object 
 	-->
-	<bean class="org.mitre.openid.connect.client.service.impl.SignedAuthRequestUrlBuilder">
+	<bean class="org.mitre.openid.connect.client.service.impl.SignedAuthRequestUrlBuilder" id="signedAuthRequestUrlBuilder">
 	  <property name="signingAndValidationService" ref="defaultSignerService" />
 	</bean>
 
 	<!-- 
 		Encrypted authorization request builder, puts all the options as elements in a JWE-encrypted request object
 	-->
-	<bean class="org.mitre.openid.connect.client.service.impl.EncryptedAuthRequestUrlBuilder">
+	<bean class="org.mitre.openid.connect.client.service.impl.EncryptedAuthRequestUrlBuilder" id="encryptedAuthRequestUrlBuilder">
 	  <property name="encrypterService" ref="validatorCache" />
 	    <property name="alg">
 	      <util:constant static-field="com.nimbusds.jose.JWEAlgorithm.RSA1_5"/>
