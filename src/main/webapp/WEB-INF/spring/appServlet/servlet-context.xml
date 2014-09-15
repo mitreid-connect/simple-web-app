@@ -173,7 +173,7 @@
 				<entry key="http://localhost:8080/openid-connect-server-webapp/">
 					<bean class="org.mitre.openid.connect.config.ServerConfiguration">
 						<property name="issuer" value="http://localhost:8080/openid-connect-server-webapp/" />
-						<property name="authorizationEndpointUri"	value="$http://localhost:8080/openid-connect-server-webapp/authorize" />
+						<property name="authorizationEndpointUri"	value="http://localhost:8080/openid-connect-server-webapp/authorize" />
 						<property name="tokenEndpointUri"	value="http://localhost:8080/openid-connect-server-webapp/token" />
 						<property name="userInfoUri" value="http://localhost:8080/openid-connect-server-webapp/userinfo" />
 						<property name="jwksUri" value="http://localhost:8080/openid-connect-server-webapp/jwk" />
@@ -198,7 +198,7 @@
 				<entry key="http://localhost:8080/openid-connect-server-webapp/">
 					<bean class="org.mitre.openid.connect.config.ServerConfiguration">
 						<property name="issuer" value="http://localhost:8080/openid-connect-server-webapp/" />
-						<property name="authorizationEndpointUri"	value="$http://localhost:8080/openid-connect-server-webapp/authorize" />
+						<property name="authorizationEndpointUri"	value="http://localhost:8080/openid-connect-server-webapp/authorize" />
 						<property name="tokenEndpointUri"	value="http://localhost:8080/openid-connect-server-webapp/token" />
 						<property name="userInfoUri" value="http://localhost:8080/openid-connect-server-webapp/userinfo" />
 						<property name="jwksUri" value="http://localhost:8080/openid-connect-server-webapp/jwk" />
