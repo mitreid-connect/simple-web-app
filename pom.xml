@@ -176,6 +176,17 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.2.10.v20150310</version>
+				<configuration>
+			    <scanIntervalSeconds>10</scanIntervalSeconds>
+				    <webApp>
+				      	<contextPath>/</contextPath>
+				    </webApp>
+			  </configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<name>simple-web-app</name>
