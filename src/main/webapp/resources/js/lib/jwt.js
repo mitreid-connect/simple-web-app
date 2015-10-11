@@ -163,7 +163,7 @@ var JWTInternals = (function() {
     {
       var parts = input.split(".");
       if (parts.length != 3) {
-        throw new MalformedWebToken("Must have three parts");
+        throw new InputException("Must have three parts");
       }
       var token = new WebToken();
       token.headerSegment = parts[0];

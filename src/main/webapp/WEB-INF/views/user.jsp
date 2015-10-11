@@ -81,7 +81,13 @@
 		
 		var userInfo = ${ userInfoJson };
 		_.each(userInfo, function(val, key, list) {
-			$('#userInfoTable tbody').append('<tr><td>' + _.escape(key) + '</td><td>' + _.escape(val) + '</td></tr>');
+			if (_.isObject(val)) {
+				_.each(val, function(subval, subkey, list) {
+					$('#userInfoTable tbody').append('<tr><td>' + _.escape(key) + '.' + _.escape(subkey) + '</td><td>' + _.escape(subval) + '</td></tr>');
+				});
+			} else {
+				$('#userInfoTable tbody').append('<tr><td>' + _.escape(key) + '</td><td>' + _.escape(val) + '</td></tr>');
+			}
 		});
 	});
 
