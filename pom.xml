@@ -7,25 +7,20 @@
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
-		<java-version>1.6</java-version>
-		<org.springframework-version>3.2.3.RELEASE</org.springframework-version>
-		<org.aspectj-version>1.6.9</org.aspectj-version>
-		<org.slf4j-version>1.5.10</org.slf4j-version>
-		<spring.security.version>3.1.4.RELEASE</spring.security.version>
-		<mitreid-connect-version>1.1.12</mitreid-connect-version>
+		<java-version>1.7</java-version>
+		<org.slf4j-version>1.7.12</org.slf4j-version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.mitre</groupId>
 			<artifactId>openid-connect-client</artifactId>
-			<version>${mitreid-connect-version}</version>
+			<version>1.2.2</version>
 		</dependency>
 
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${org.springframework-version}</version>
 			<exclusions>
 				<!-- Exclude Commons Logging in favor of SLF4j -->
 				<exclusion>
@@ -37,15 +32,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>${org.springframework-version}</version>
 		</dependency>
-				
-		<!-- AspectJ -->
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>${org.aspectj-version}</version>
-		</dependency>	
 		
 		<!-- Logging -->
 		<dependency>
@@ -126,7 +113,6 @@
 	        <dependency>
         	    <groupId>org.springframework.security</groupId>
 	            <artifactId>spring-security-taglibs</artifactId>
-        	    <version>${spring.security.version}</version>
 	            <exclusions>
         	    	<exclusion>
             			<groupId>org.springframework</groupId>
@@ -135,6 +121,24 @@
 	            </exclusions>
         	</dependency>
 	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>4.1.8.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-bom</artifactId>
+				<version>3.2.8.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
 		<plugins>
 			<plugin>
@@ -179,12 +183,15 @@
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
-				<version>9.2.10.v20150310</version>
+				<version>9.3.3.v20150827</version>
 				<configuration>
-			    <scanIntervalSeconds>10</scanIntervalSeconds>
-				    <webApp>
-				      	<contextPath>/</contextPath>
-				    </webApp>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<webApp>
+						<contextPath>/simple-web-app</contextPath>
+					</webApp>
+					<httpConnector>
+						<port>8080</port>
+					</httpConnector>
 			  </configuration>
 			</plugin>
 		</plugins>
