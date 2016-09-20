@@ -183,7 +183,7 @@
 				<configuration>
 			    <scanIntervalSeconds>10</scanIntervalSeconds>
 				    <webApp>
-				      	<contextPath>/</contextPath>
+				      	<contextPath>/simple-web-app</contextPath>
 				    </webApp>
 			  </configuration>
 			</plugin>
