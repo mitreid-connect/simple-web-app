@@ -44,10 +44,10 @@ public class HomeController {
 	// filter reference so we can get class names and things like that.
 	@Autowired
 	private OIDCAuthenticationFilter filter;
-	
+
 	@Resource(name = "namedAdmins")
 	private Set<SubjectIssuerGrantedAuthority> admins;
-	
+
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
@@ -59,7 +59,7 @@ public class HomeController {
 		model.addAttribute("clientConfigurationServiceClass", filter.getClientConfigurationService().getClass().getSimpleName());
 		model.addAttribute("authRequestOptionsServiceClass", filter.getAuthRequestOptionsService().getClass().getSimpleName());
 		model.addAttribute("authRequestUriBuilderClass", filter.getAuthRequestUrlBuilder().getClass().getSimpleName());
-		
+
 		model.addAttribute("admins", admins);
 
 		return "home";
