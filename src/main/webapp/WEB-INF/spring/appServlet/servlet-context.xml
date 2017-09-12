@@ -246,12 +246,12 @@
 				<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" />
 				<property name="redirectUris">
 					<set>
-						<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
+						<value>http://localhost:8081/simple-web-app/openid_connect_login</value>
 					</set>
 				</property>
 				<!-- for signed requests -->
 				<property name="requestObjectSigningAlg" value="RS256" />
-				<property name="jwksUri" value="http://localhost:8080/simple-web-app/jwk" />
+				<property name="jwksUri" value="http://localhost:8081/simple-web-app/jwk" />
 			</bean>
 		</property>
 		<!-- 
@@ -292,7 +292,7 @@
 						<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" />
 						<property name="redirectUris">
 							<set>
-								<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
+								<value>http://localhost:8081/simple-web-app/openid_connect_login</value>
 							</set>
 						</property>
 					</bean>
@@ -324,7 +324,7 @@
 						<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" />
 						<property name="redirectUris">
 							<set>
-								<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
+								<value>http://localhost:8081/simple-web-app/openid_connect_login</value>
 							</set>
 						</property>
 						
@@ -347,7 +347,7 @@
 				<property name="tokenEndpointAuthMethod" value="SECRET_BASIC" />
 				<property name="redirectUris">
 					<set>
-						<value>http://localhost:8080/simple-web-app/openid_connect_login</value>
+						<value>http://localhost:8081/simple-web-app/openid_connect_login</value>
 					</set>
 				</property>
 			</bean>
