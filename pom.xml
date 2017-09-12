@@ -192,6 +192,7 @@
 			    <scanIntervalSeconds>10</scanIntervalSeconds>
 				    <webApp>
 				      	<contextPath>/simple-web-app</contextPath>
+				      	<webInfIncludeJarPattern>.*/spring-[^/]*\.jar$</webInfIncludeJarPattern>
 				    </webApp>
 			  </configuration>
 			</plugin>
